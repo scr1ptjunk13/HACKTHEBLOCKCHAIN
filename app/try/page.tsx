@@ -1,39 +1,154 @@
 "use client"
 
-export default function BankHeistChallenge() {
+import React, { useState } from "react";
+import { Play, CheckCircle, AlertCircle, RefreshCcw, ChevronRight } from "lucide-react";
+
+export default function DEXChallenge() {
+  const [code, setCode] = useState(`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Exploit {
+    // Write your exploit here
+    // Hint: Use AAVE for flash loan
+}`);
+  const [testResults, setTestResults] = useState([]);
+  const [currentBalance, setCurrentBalance] = useState("0");
+  const [showDEXCode, setShowDEXCode] = useState(false);
+
+  const toggleDEXCode = () => setShowDEXCode(!showDEXCode);
+
   return (
-    <main className="min-h-screen bg-[#141d2b]">
-      <div id="room-banner" className="relative p-8 text-white">
-        {/* Icon and Title Section */}
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12">
-            <svg viewBox="0 0 24 24" className="text-red-500">
-              <path fill="currentColor" d="M19 3L13 9L15 11L22 4V3M12 12.5A0.5 0.5 0 0 1 11.5 12A0.5 0.5 0 0 1 12 11.5A0.5 0.5 0 0 1 12.5 12A0.5 0.5 0 0 1 12 12.5M6 20A2 2 0 0 1 4 18C4 16.89 4.9 16 6 16A2 2 0 0 1 8 18C8 19.11 7.1 20 6 20M6 8A2 2 0 0 1 4 6C4 4.89 4.9 4 6 4A2 2 0 0 1 8 6C8 7.11 7.1 8 6 8M9.64 7.64C9.87 7.14 10 6.59 10 6A4 4 0 0 0 6 2A4 4 0 0 0 2 6A4 4 0 0 0 6 10C6.59 10 7.14 9.87 7.64 9.64L10 12L7.64 14.36C7.14 14.13 6.59 14 6 14A4 4 0 0 0 2 18A4 4 0 0 0 6 22A4 4 0 0 0 10 18C10 17.41 9.87 16.86 9.64 16.36L12 14L19 21H22V20L9.64 7.64Z" />
-            </svg>
-            
+    <div className="flex flex-col h-screen gap-4 p-4">
+      {/* Challenge Header */}
+      <div className="bg-gray-900 p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-2">Flash Loan DEX Attack</h2>
+        <div className="flex items-center gap-4 mb-4">
+          <span className="bg-orange-600/20 text-orange-400 px-3 py-1 rounded-full text-sm">Hard</span>
+          <span className="text-sm text-gray-400">Reward: 1000 XP</span>
+        </div>
+        <p className="text-gray-300 mb-4">
+          Exploit the vulnerable DEX by using a flash loan to manipulate the price oracle and make a profit.
+        </p>
+      </div>
+
+      {/* Challenge Environment */}
+      <div className="grid grid-cols-2 gap-4 flex-grow">
+        {/* Left Panel: Code Editor */}
+        <div className="flex flex-col bg-gray-900 rounded-lg">
+          <div className="border-b border-gray-800 p-3 flex justify-between items-center">
+            <div className="flex gap-2">
+              <button className="bg-green-600 hover:bg-green-700 px-4 py-1.5 rounded-md text-sm flex items-center gap-2">
+                <Play size={14} /> Run Exploit
+              </button>
+              <button className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-md text-sm flex items-center gap-2">
+                <RefreshCcw size={14} /> Reset
+              </button>
+            </div>
+            <div className="text-sm text-gray-400">
+              Current Balance: {currentBalance} ETH
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold">Offensive Security Intro</h1>
-            <p className="text-gray-400 mt-2">
-              Hack your first website (legally in a safe environment) and experience an ethical hacker's job.
-            </p>
+          <div className="flex-grow p-4">
+            <textarea
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              className="w-full h-full bg-gray-950 text-gray-300 font-mono text-sm p-4 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              spellCheck="false"
+            />
           </div>
         </div>
 
-        {/* Difficulty and Time */}
-        <div className="flex items-center gap-4 mt-4">
-          <span className="text-green-500 flex items-center gap-1">
-            <span className="text-sm">Easy</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
-            </svg>
-            <span className="text-sm">15 min</span>
-          </span>
+        {/* Right Panel: Environment State */}
+        <div className="flex flex-col bg-gray-900 rounded-lg">
+          <div className="border-b border-gray-800 p-3 flex justify-between items-center">
+            <h3 className="font-semibold">Environment State</h3>
+            <button
+              className="text-sm bg-blue-600 px-4 py-1.5 rounded-md hover:bg-blue-700"
+              onClick={toggleDEXCode}
+            >
+              {showDEXCode ? "Hide DEX Code" : "Show DEX Code"}
+            </button>
+          </div>
+          {showDEXCode && (
+            <div className="p-4 bg-gray-800 rounded-lg text-sm font-mono text-gray-300">
+              <pre>
+                {`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract VulnerableDEX {
+    mapping(address => uint256) public balances;
+    uint256 public constant PRICE = 1000; // 1 ETH = 1000 USDC
+    
+    function getPrice() public view returns (uint256) {
+        return PRICE;
+    }
+    
+    function swap(bool ethToUsdc) external payable {
+        if (ethToUsdc) {
+            uint256 usdcToReceive = msg.value * getPrice();
+            require(balances[address(this)] >= usdcToReceive, "Insufficient liquidity");
+            balances[msg.sender] += usdcToReceive;
+            balances[address(this)] -= usdcToReceive;
+        } else {
+            // Implementation for USDC to ETH swap
+        }
+    }
+}`}
+              </pre>
+            </div>
+          )}
+
+          <div className="p-4 space-y-4">
+            {/* DEX State */}
+            <div className="bg-gray-800 p-4 rounded-lg">
+              <h4 className="text-sm font-semibold mb-2">DEX Liquidity Pools</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-700 p-3 rounded-lg">
+                  <div className="text-sm text-gray-400">ETH-USDC</div>
+                  <div className="text-lg">$2M TVL</div>
+                </div>
+                <div className="bg-gray-700 p-3 rounded-lg">
+                  <div className="text-sm text-gray-400">Price Oracle</div>
+                  <div className="text-lg">1 ETH = $2,000</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Cases */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Verification Steps</h4>
+              {[
+                "Flash loan taken successfully",
+                "Price manipulation executed",
+                "Profit generated",
+                "Loan repaid in same transaction",
+              ].map((test, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm py-2">
+                  {testResults[i] ? (
+                    <CheckCircle size={16} className="text-green-500" />
+                  ) : (
+                    <ChevronRight size={16} className="text-gray-500" />
+                  )}
+                  {test}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </main>
-  )
-}
 
+      {/* Console Output */}
+      <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
+        <div className="flex items-center gap-2 mb-2">
+          <AlertCircle size={14} className="text-gray-400" />
+          <h3 className="text-sm font-semibold">Transaction Log</h3>
+        </div>
+        <pre className="text-sm text-gray-300 font-mono">
+          {`> Initializing environment...
+> DEX deployed at: 0x123...
+> Your balance: 0.1 ETH`}
+        </pre>
+      </div>
+    </div>
+  );
+}
